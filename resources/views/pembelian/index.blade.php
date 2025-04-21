@@ -41,9 +41,10 @@
                             <i class="bi bi-file-earmark-excel"></i> Export Penjualan
                         </button>
                     @else
-                        <a class="btn btn-outline-primary" href="{{ route('formatexcel') }}">
-                            <i class="bi bi-file-earmark-excel"></i> Export Penjualan
-                        </a>
+                    <a class="btn btn-outline-primary" 
+                        href="{{ route('formatexcel', request()->only(['day', 'month', 'year'])) }}">
+                        <i class="bi bi-file-earmark-excel"></i> Export Penjualan
+                    </a>
                     @endif
                     </div>
                 @if (Auth::user()->role == 'kasir')
@@ -51,39 +52,35 @@
                 @endif
             </div>
             
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <form method="GET" class="d-flex align-items-center gap-2">
-                    {{-- <label for="date" class="mb-0">Tanggal</label>
-                    <input type="date" name="date" id="date" class="form-control form-control-sm" value="{{ request('date') }}" onchange="this.form.submit()"> --}}
-            
-                    <label for="month" class="mb-0">Bulan</label>
-                    <select name="month" id="month" class="form-select form-select-sm" onchange="this.form.submit()">
-                        <option value="">Semua</option>
-                        @for ($i = 1; $i <= 12; $i++)
-                            <option value="{{ $i }}" {{ request('month') == $i ? 'selected' : '' }}>
-                                {{ DateTime::createFromFormat('!m', $i)->format('F') }}
-                            </option>
-                        @endfor
-                    </select>
-            
-                    <label for="year" class="mb-0">Tahun</label>
-                    <select name="year" id="year" class="form-select form-select-sm" onchange="this.form.submit()">
-                        <option value="">Semua</option>
-                        @for ($i = now()->year; $i >= 2000; $i--)
-                            <option value="{{ $i }}" {{ request('year') == $i ? 'selected' : '' }}>{{ $i }}</option>
-                        @endfor
-                    </select>
-                </form>
-                <form method="GET" class="d-flex align-items-center gap-2">
-                    <label for="limit" class="mb-0">Tampilkan</label>
-                    <select name="limit" id="limit" class="form-select form-select-sm" onchange="this.form.submit()"> 
-                        <option value="10" {{ request('limit') == 10 ? 'selected' : '' }}>10</option>
-                        <option value="15" {{ request('limit') == 15 ? 'selected' : '' }}>15</option>
-                        <option value="20" {{ request('limit') == 20 ? 'selected' : '' }}>20</option>
-                    </select>
-                    <span class="mb-0">Entri</span>
-                </form>
-                <div>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <form method="GET" class="d-flex align-items-center gap-2">
+                            <label for="day" class="mb-0">Tanggal</label>
+                            <select name="day" id="day" class="form-select form-select-sm" onchange="this.form.submit()">
+                                <option value="">Semua</option>
+                                @for ($i = 1; $i <= 31; $i++)
+                                    <option value="{{ $i }}" {{ request('day') == $i ? 'selected' : '' }}>{{ $i }}</option>
+                                @endfor
+                            </select>
+                    
+                            <label for="month" class="mb-0">Bulan</label>
+                            <select name="month" id="month" class="form-select form-select-sm" onchange="this.form.submit()">
+                                <option value="">Semua</option>
+                                @for ($i = 1; $i <= 12; $i++)
+                                    <option value="{{ $i }}" {{ request('month') == $i ? 'selected' : '' }}>
+                                        {{ DateTime::createFromFormat('!m', $i)->format('F') }}
+                                    </option>
+                                @endfor
+                            </select>
+                    
+                            <label for="year" class="mb-0">Tahun</label>
+                            <select name="year" id="year" class="form-select form-select-sm" onchange="this.form.submit()">
+                                <option value="">Semua</option>
+                                @for ($i = now()->year; $i >= 2000; $i--)
+                                    <option value="{{ $i }}" {{ request('year') == $i ? 'selected' : '' }}>{{ $i }}</option>
+                                @endfor
+                            </select>
+                        </form>
+                    </div>
                     <form method="GET">
                         <input type="text" name="search" class="form-control" placeholder="Cari..."
                             value="{{ request('search') }}">

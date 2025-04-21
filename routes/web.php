@@ -19,9 +19,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/orderMember', [TransactionController::class, 'checkMember'])->name('orderMember');
     Route::resource('pembelians', TransactionController::class);
     Route::post('/logout', [UserController::class, 'logout'])->name('logout');
-    Route::get('/export-excel', function () {
-        return Excel::download(new TransactionImport, 'selling.xlsx');
-    })->name('formatexcel');
+    Route::get('/export-excel', [TransactionController::class, 'exportExcel'])->name('formatexcel');
 });
 
 Route::middleware('guest')->group(function () {

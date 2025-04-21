@@ -7,6 +7,8 @@ use App\Models\Member;
 use App\Models\Product;
 use App\Models\DetailOrder;
 use App\Models\Transaction;
+use App\Exports\TransactionImport;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
@@ -14,38 +16,38 @@ use Illuminate\Support\Facades\Auth;
 class TransactionController extends Controller
 {
 
-    public function index(Request $request)
-    {
-        $limit = $request->limit ?? 10;
-    
-        $query = Transaction::with('user', 'member', 'details.product')->latest();
-    
-        // Filter berdasarkan nama member
-        if ($request->has('search') && $request->search != '') {
-            $query->whereHas('member', function ($q) use ($request) {
-                $q->where('name', 'like', '%' . $request->search . '%');
-            });
-        }
-    
-        // Filter berdasarkan tanggal
-        // if ($request->has('date') && $request->date != '') {
-        //     $query->whereDate('created_at', $request->date);
-        // }
-    
-        // Filter berdasarkan bulan
-        if ($request->has('month') && $request->month != '') {
-            $query->whereMonth('created_at', $request->month);
-        }
-    
-        // Filter berdasarkan tahun
-        if ($request->has('year') && $request->year != '') {
-            $query->whereYear('created_at', $request->year);
-        }
-    
-        $transaction = $query->paginate($limit)->appends($request->all());
-    
-        return view('pembelian.index', compact('transaction'));
+public function index(Request $request)
+{
+    $limit = $request->limit ?? 10;
+
+    $query = Transaction::with('user', 'member', 'details.product')->latest();
+
+    // Filter berdasarkan nama member
+    if ($request->has('search') && $request->search != '') {
+        $query->whereHas('member', function ($q) use ($request) {
+            $q->where('name', 'like', '%' . $request->search . '%');
+        });
     }
+
+    // Filter berdasarkan hari
+    if ($request->has('day') && $request->day != '') {
+        $query->whereDay('created_at', $request->day);
+    }
+
+    // Filter berdasarkan bulan
+    if ($request->has('month') && $request->month != '') {
+        $query->whereMonth('created_at', $request->month);
+    }
+
+    // Filter berdasarkan tahun
+    if ($request->has('year') && $request->year != '') {
+        $query->whereYear('created_at', $request->year);
+    }
+
+    $transaction = $query->paginate($limit)->appends($request->all());
+
+    return view('pembelian.index', compact('transaction'));
+}
 
     public function search(Request $request) {
         $search = Transaction::where('member_id', $request->search)->first();
@@ -320,4 +322,9 @@ public function result($transactionId, Request $request)
         $pdf = Pdf::loadView('pembelian.invoice', $data);
         return $pdf->stream('bukti-pembelian.pdf');
     }
+
+    public function exportExcel(Request $request)
+{
+    return Excel::download(new TransactionImport($request), 'penjualan.xlsx');
+}
 }

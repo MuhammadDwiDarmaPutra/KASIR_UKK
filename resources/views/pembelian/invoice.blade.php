@@ -9,7 +9,7 @@
             font-family: Arial, sans-serif;
             padding: 30px;
             max-width: 800px;
-            margin: auto;
+            margin: auto;   
         }
 
         .logo {
@@ -34,8 +34,15 @@
         td {
             border: 1px solid #ddd;
             padding: 10px;
-            text-align: left;
         }
+
+        td:nth-child(2),
+        td:nth-child(3),
+        td:nth-child(4),
+        tfoot td {
+            text-align: right;
+        }
+
 
         th {
             background-color: #f4f4f4;

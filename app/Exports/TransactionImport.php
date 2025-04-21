@@ -5,21 +5,39 @@ namespace App\Exports;
 use App\Models\Transaction;
 use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Illuminate\Http\Request;
 
 class TransactionImport implements FromArray, WithHeadings
 {
-    /**
-    * @return array
-    */
+    protected $request;
+
+    public function __construct(Request $request)
+    {
+        $this->request = $request;
+    }
+
     public function array(): array
     {
-        return Transaction::with('member', 'user', 'details.product')->get()->map(function ($transaction) {
+        $query = Transaction::with('member', 'user', 'details.product');
+
+        // FILTER BERDASARKAN REQUEST
+        if ($this->request->filled('day')) {
+            $query->whereDay('created_at', $this->request->day);
+        }
+        if ($this->request->filled('month')) {
+            $query->whereMonth('created_at', $this->request->month);
+        }
+        if ($this->request->filled('year')) {
+            $query->whereYear('created_at', $this->request->year);
+        }
+
+        return $query->get()->map(function ($transaction) {
             return $transaction->details->map(function ($detail) use ($transaction) {
                 return [
                     'Tanggal' => $transaction->created_at->format('Y-m-d'),
                     'Nama Member' => $transaction->member ? $transaction->member->name : 'Non Member',
                     'Nomor Telepon' => $transaction->member ? $transaction->member->phone_number : '-',
-                    'Total Harga' => $transaction->total_price,
+                    'Total Harga' => number_format($transaction->total_price, 0, ',', '.'),
                     'Nama Kasir' => $transaction->user->name,
                     'Product' => $detail->product->name,
                     'Qty' => $detail->qty,
@@ -32,11 +50,6 @@ class TransactionImport implements FromArray, WithHeadings
         })->flatten(1)->toArray();
     }
 
-    /**
-    * Define the header row.
-    *
-    * @return array
-    */
     public function headings(): array
     {
         return [
