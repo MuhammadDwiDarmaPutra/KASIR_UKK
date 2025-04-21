@@ -43,17 +43,20 @@
                                             <i class="mdi mdi-pencil-outline me-2"></i> Edit
                                         </a>
                                     </li>
-                                    {{-- <li>
-                                        <form action="{{ route('users.destroy', $user->id) }}" method="POST"
-                                            onsubmit="return confirm('Yakin ingin menghapus user ini?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button class="dropdown-item text-danger" type="submit">
-                                                <i class="mdi mdi-trash-can-outline me-2"></i> Delete
-                                            </button>
-                                        </form>
-                                    </li> --}}
-                                </ul>
+                                
+                                    @if ($user->role === 'kasir')
+                                        <li>
+                                            <form action="{{ route('users.destroy', $user->id) }}" method="POST"
+                                                onsubmit="return confirm('Yakin ingin menghapus user ini?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button class="dropdown-item text-danger" type="submit">
+                                                    <i class="mdi mdi-trash-can-outline me-2"></i> Delete
+                                                </button>
+                                            </form>
+                                        </li>
+                                    @endif
+                                </ul>                                
                             </div>
                         </td>
                     </tr>
