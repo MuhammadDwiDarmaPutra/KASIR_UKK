@@ -45,7 +45,7 @@
             </div>
             <div class="mb-3">
                 <label for="totalBayar" class="form-label">Total Bayar</label>
-                <input type="text" class="form-control" id="totalBayar" name="total_bayar" placeholder="Masukkan jumlah pembayaran">
+                <input type="text" class="form-control" id="totalBayar" name="total_bayar" placeholder="Masukkan jumlah pembayaran" max="1000000000000" oninput="if (this.value > 1000000000) this.value = 1000000000000;">
                 <small class="text-danger d-none" id="errorBayar">Jumlah bayar kurang!</small>
             </div>
             <button class="btn btn-primary w-100" type="submit" id="btnPesan">Pesan</button>

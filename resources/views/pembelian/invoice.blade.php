@@ -67,6 +67,13 @@
 
 <body>
     <h1>Invoice - #1</h1>
+    <p><strong>Dibuat oleh:</strong> {{ $transaction->user->name }}</p>
+        <div class="notes"></div>
+    <address>
+        Kasirku.<br>
+        Alamat: Wangun Tengah, Sindangsari, Bogor Timur<br>
+        Email: kasir@gmail.com
+    </address>
     <p>Member Name : {{ $member ? $member->name : 'Non Member' }}</p>
     <p>No. HP : {{ $member ? $member->phone_number : '-' }}</p>
     <p>Bergabung Sejak : {{ $member ? $member->created_at->format('d F Y') : '-' }}</p>
@@ -100,26 +107,17 @@
                 <td>Rp.{{ number_format($transaction->total_price, 0, ',', '.') }}</td>
             </tr>
             <tr>
-                <th colspan="3">Kembalian</th>
-                <td>Rp.{{ number_format($transaction->total_return, 0, ',', '.') }}</td>
-            </tr>
-            <tr>
                 <th colspan="3">Total</th>
                 <td>Rp.{{ number_format($transaction->total_price, 0, ',', '.') }}</td>
             </tr>
+            <tr>
+                <th colspan="3">Kembalian</th>
+                <td>Rp.{{ number_format($transaction->total_return, 0, ',', '.') }}</td>
+            </tr>
         </tfoot>
         </table>
-        <p><strong>Dibuat oleh:</strong> {{ $transaction->user->name }}</p>
-        <div class="notes">
             Terima kasih atas pembelian Anda.
-        </div>
         <hr>
-        <address>
-            Kasirku.<br>
-            Alamat: Wangun Tengah, Sindangsari, Bogor Timur<br>
-            Email: kasir@gmail.com
-        </address>
-
 </body>
 
 </html>

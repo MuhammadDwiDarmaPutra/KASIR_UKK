@@ -29,7 +29,7 @@ public function index(Request $request)
         });
     }
 
-    // Filter berdasarkan hari
+    // Filter berdasarkan hariF
     if ($request->has('day') && $request->day != '') {
         $query->whereDay('created_at', $request->day);
     }
